@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Generator</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="data">Enter the data you want to encode:</label><br>
+        <input type="text" id="data" name="data" required><br>
+        <input type="submit" value="Generate QR Code">
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if img_data %}
+    <h1>Your QR Code:</h1>
+    <img src="data:image/png;base64,{{ img_data }}"><br>
+    <a href="{{ url_for('download', img_filename=img_filename) }}"><button>Download QR Code</button></a>
+    {% endif %}
+</body>
+</html>
