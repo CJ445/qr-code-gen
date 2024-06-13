@@ -3,7 +3,7 @@
 This project is a web application built using Flask that generates QR codes with a custom logo and allows users to download the generated QR codes. The QR code color is set to a specific color (`#143e53`).
 
 ## Note
-### This part of the code in app.py was commented while pushing to production
+### This part of the code in `app.py` was commented while pushing to production
 
 ```
 # The code below is commented to push to production deployment.
