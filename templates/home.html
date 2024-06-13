@@ -1,29 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-btn {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <form method="POST">
-        <label for="data">Enter the data you want to encode:</label><br>
-        <input type="text" id="data" name="data" required><br>
-        <input type="submit" value="Generate QR Code">
-    </form>
+    <div class="container">
+        <h1 class="text-center">QR Code Generator</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="data">Enter the data you want to encode:</label>
+                <input type="text" class="form-control" id="data" name="data" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Generate QR Code</button>
+        </form>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-warning mt-4">
+                <ul>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+          {% endif %}
+        {% endwith %}
 
-    {% if img_data %}
-    <h1>Your QR Code:</h1>
-    <img src="data:image/png;base64,{{ img_data }}"><br>
-    <a href="{{ url_for('download', img_filename=img_filename) }}"><button>Download QR Code</button></a>
-    {% endif %}
+        {% if img_data %}
+        <div class="qr-code">
+            <h2>Your QR Code:</h2>
+            <img src="data:image/png;base64,{{ img_data }}" class="img-fluid"><br>
+            <a href="{{ url_for('download', img_filename=img_filename) }}" class="btn btn-success download-btn">Download QR Code</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
