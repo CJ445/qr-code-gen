@@ -88,5 +88,6 @@ def download():
         flash('File not found.')
         return redirect('/')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# The code below is commented to push to production deployment.
+# if __name__ == '__main__':
+#     app.run(debug=True)
