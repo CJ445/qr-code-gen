@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, send_file
+from flask import Flask, redirect, render_template, request, flash, send_file
 import qrcode
 from PIL import Image, ImageDraw
 from io import BytesIO
