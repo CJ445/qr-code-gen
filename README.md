@@ -74,10 +74,17 @@ This project is a web application built using Flask that generates QR codes with
 ## Project Structure
 
 qr-code-generator/
+
 │
+
 ├── app.py
+
 ├── requirements.txt
+
 ├── logo.png
+
+├── static
+
 └── templates/
     └── home.html
 
