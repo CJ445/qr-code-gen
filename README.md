@@ -28,7 +28,7 @@ This project is a web application built using Flask that generates QR codes with
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/qr-code-generator.git
+    git clone https://github.com/cj445/qr-code-generator.git
     cd qr-code-generator
     ```
 
