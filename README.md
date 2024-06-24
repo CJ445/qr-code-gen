@@ -82,22 +82,16 @@ This project is a web application built using Flask that generates QR codes with
     - Your custom QR code will be displayed along with a download button.
 
 ## Project Structure
-
+```
 qr-code-generator/
-
 │
-
 ├── app.py
-
 ├── requirements.txt
-
 ├── logo.png
-
 ├── static
-
 └── templates/
     └── home.html
-
+```
 
 ## Dependencies
 
