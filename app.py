@@ -5,6 +5,11 @@ from io import BytesIO
 import base64
 import os
 
+# Import styled image classes and modules
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers.pil import (RoundedModuleDrawer, CircleModuleDrawer, GappedSquareModuleDrawer)
+from qrcode.image.styles.colormasks import (RadialGradiantColorMask, SolidFillColorMask)
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -14,9 +19,19 @@ def home():
     img_filename = None
     if request.method == 'POST':
         data = request.form.get('data')
+        box_size = request.form.get('box_size', type=int)
+        logo_proportion = request.form.get('logo_proportion', type=float)
+        style = request.form.get('style')
+        color_mask = request.form.get('color_mask')
 
         if not data:
-            flash('Please enter the url for the QR code.')
+            flash('Please enter the URL for the QR code.')
+            return render_template('home.html')
+        if not box_size:
+            flash('Please enter the box size for the QR code.')
+            return render_template('home.html')
+        if not logo_proportion:
+            flash('Please enter the logo proportion for the QR code.')
             return render_template('home.html')
 
         try:
@@ -33,32 +48,48 @@ def home():
                 background.paste(logo, (0, 0), logo)
                 logo = background
 
-            basewidth = 100
-            wpercent = (basewidth / float(logo.size[0]))
-            hsize = int((float(logo.size[1]) * float(wpercent)))
-            logo = logo.resize((basewidth, hsize), Image.LANCZOS)
-
             qr = qrcode.QRCode(
-                version=1,
+                version=None,
                 error_correction=qrcode.constants.ERROR_CORRECT_H,
-                box_size=10,
+                box_size=box_size,
                 border=4,
             )
 
             qr.add_data(data)
             qr.make(fit=True)
 
-            # Set custom colors for the QR code
-            fill_color = "#143e53"
-            back_color = "white"
+            # Select the style
+            if style == 'rounded':
+                module_drawer = RoundedModuleDrawer()
+            elif style == 'circle':
+                module_drawer = CircleModuleDrawer()
+            elif style == 'gapped':
+                module_drawer = GappedSquareModuleDrawer()
+            else:
+                module_drawer = None  # Default
 
-            img = qr.make_image(fill_color=fill_color, back_color=back_color).convert("RGB")
+            # Select the color mask
+            if color_mask == 'radial':
+                mask = RadialGradiantColorMask()
+            elif color_mask == 'solid':
+                mask = SolidFillColorMask()
+            else:
+                mask = None  # Default
 
-            # Ensure QR code image can handle transparency
-            if img.mode in ('RGBA', 'LA'):
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                background.paste(img, (0, 0), img)
-                img = background
+            img = qr.make_image(
+                fill_color="#143e53",
+                back_color="white",
+                image_factory=StyledPilImage,
+                module_drawer=module_drawer,
+                color_mask=mask
+            ).convert("RGB")
+
+            # Calculate logo size proportionally to QR code size
+            qr_width, qr_height = img.size
+            basewidth = int(qr_width * logo_proportion)  # Proportion of QR code size
+            wpercent = (basewidth / float(logo.size[0]))
+            hsize = int((float(logo.size[1]) * float(wpercent)))
+            logo = logo.resize((basewidth, hsize), Image.LANCZOS)
 
             pos = ((img.size[0] - logo.size[0]) // 2, (img.size[1] - logo.size[1]) // 2)
             img.paste(logo, pos)
